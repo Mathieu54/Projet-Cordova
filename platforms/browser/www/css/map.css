@@ -1,0 +1,12 @@
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    font-family: Alata;
+}
+.itineraire {
+	width: 100%;
+	height: 10%;
+	background-color: red;
+}

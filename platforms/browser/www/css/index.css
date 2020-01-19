@@ -38,6 +38,8 @@ body {
     height: 35px;
 }
 .input_text {
+	margin-left: 2%;
+	margin-right: 2%;
     margin-top: 10px;
     margin-bottom: 10px;
 }
@@ -47,8 +49,11 @@ body {
     color: #02020f;
 }
 #validate {
-    width: 100%;
+    width: 96%;
     height: 35px;
+    margin-left: 2%;
+	margin-right: 2%;
+	margin-bottom: 2%;
 }
 #error {
     background-color: #fb1d1d;
