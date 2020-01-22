@@ -2,6 +2,12 @@ var pos_user_marker;
 var pos_lat_user;
 var pos_long_user;
 var map;
+var time_check_pos_user = 1000;
+var markers_monu = {};
+var circles_peri = {};
+var circles_zoom = {};
+var radius_visit = 30;
+var radius_zoom = 100;
 var icon_user = L.icon({
     iconUrl: 'img/user_position.png',
     iconSize:     [20, 30]
@@ -23,10 +29,10 @@ $(document).ready(function () {
 
     map = L.map('affiche_map');
 
-   /* function CheckPositionUser() {
+   	function CheckPositionUser() {
             setInterval(function() { 
             navigator.geolocation.getCurrentPosition(update_position, position_error);
-        }, 5000);
+        }, time_check_pos_user);
     }
 
     CheckPositionUser();
@@ -35,12 +41,11 @@ $(document).ready(function () {
         pos_lat_user = position.coords.latitude.toString();
         pos_long_user = position.coords.longitude.toString();
         if(pos_user_marker == null) {
-            pos_user_marker = L.marker([parseFloat(pos_lat_user), parseFloat(pos_long_user)], {icon: icon_user}).addTo(map);
+            pos_user_marker = L.marker([parseFloat(pos_lat_user), parseFloat(pos_long_user)], {icon: icon_user, zIndexOffset: 1000}).addTo(map);
             pos_user_marker.bindPopup("<p>Vous êtes ici !</p>");
             map.panTo(new L.LatLng(parseFloat(pos_lat_user), parseFloat(pos_long_user)));
-            pos_user_marker.addLayer
         } else {
-            pos_user_marker.setLatLng([position.coords.latitude, position.coords.longitude], {myCustomId: "BITE"}).update();
+            pos_user_marker.setLatLng([position.coords.latitude, position.coords.longitude]).update();
         }
     };
 
@@ -48,68 +53,62 @@ $(document).ready(function () {
         alert('Erreur Code: ' + error.code + '\n' + ' Message: ' + error.message + '\n');
     }
 
-    */
+	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    attribution: 'Track Monuments', maxZoom: 20, id: 'mapbox/streets-v11',
+    accessToken: 'pk.eyJ1IjoiZ3JvdXBpeCIsImEiOiJjazVlOGJiOHMyOGZnM21wZ203YjdzdW1sIn0.khLqp2UlmiehGfABIEwm0Q'}).addTo(map);
+    map.locate({setView: true, maxZoom: 15});  
 
-			L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-    attribution: 'Track Monuments',
-    maxZoom: 18,
-    id: 'mapbox/streets-v11',
-    accessToken: 'pk.eyJ1IjoiZ3JvdXBpeCIsImEiOiJjazVlOGJiOHMyOGZnM21wZ203YjdzdW1sIn0.khLqp2UlmiehGfABIEwm0Q'
-}).addTo(map);
-            map.locate({setView: true, maxZoom: 8});  
+    add_markers_monument();
 
-
-        
-
-    /*for (let i=0; i < 5; i++) {
-
-        var marker = L.marker([data[i].latitude, data[i].longitude], {icon: icon_monuments_no_visit}).addTo(map);
-  var oneMarker = L.marker(["54.5665","6.646546"], {
-    title: "test" + i
-  }).bindPopup("<b>BELLE DESC</b>").openPopup();
-alert("message?: DOMString");
-
-    oneMarker.properies.name = stops[i].Name;
-  oneMarker.properies.description = stops[i].Description;
-  oneMarker.properies.othervars = stops[i].othervars;
-  oneMarker.addTo(markersLayer);
-}*/
-var markers = {};
-
-    $.ajax({
-        url: 'http://localhost/Cordova/Projet-Cordova/requete/get_monuments_visit.php',
-        type: 'get',
-        dataType: 'json',
-        success: function (data) {
-            let liste = "";
-            for (let i=0; i < data.length; i++) {
-            	var id = data[i].id;
-                var latLng = L.latLng(data[i].latitude, data[i].longitude);
-                markers[id] = new L.marker(latLng, {id: id, icon: icon_monuments_no_visit}).on('click', markerOnClick).addTo(map);
-
+    function add_markers_monument() {
+        $.ajax({
+            url: 'http://localhost/Cordova/Projet-Cordova/requete/get_monuments_all_monuments.php',
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                let liste = "";
+                for (let i=0; i < data.length; i++) {
+                    var id = data[i].id;
+                    var latLng = L.latLng(data[i].latitude, data[i].longitude);
+                    markers_monu[id] = new L.marker(latLng, {id: id, icon: icon_monuments_no_visit}).addTo(map);
+                    circles_peri[id] = new L.circle([data[i].latitude, data[i].longitude], {color: '#787878', fillColor: '#787878', fillOpacity: 0.1, radius: radius_visit}).addTo(map);
+                    circles_zoom[id] = new L.circle([data[i].latitude, data[i].longitude], {fill: false, stroke: false, radius: radius_zoom}).addTo(map);
+                }
+                update_markers_visit();
             }
-        }
-    });
-function markerOnClick(e)
-{
-    console.log(e.sourceTarget.options.id);
-  alert("hi. you clicked the marker at " + e.latlng);
-}
+        });
+    }
 
-
-/*
-    $.ajax({
-        url: 'http://localhost/Cordova/Projet-Cordova/requete/get_monuments_no_visit.php',
-        type: 'get',
-        dataType: 'json',
-        success: function (data) {
-            let liste = "";
-            for (let i=0; i < data.length; i++) {
-            	var marker = L.marker([data[i].latitude, data[i].longitude], {icon: icon_monuments_visit}).addTo(map);
-				marker.bindPopup("te NO VISIT");
+    function update_markers_visit() {
+        $.ajax({
+            url: 'http://localhost/Cordova/Projet-Cordova/requete/get_monuments_user_visit.php',
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                let liste = "";
+                for (let i=0; i < data.length; i++) {
+                    var id = data[i].id_monuments;
+                    markers_monu[id].setIcon(icon_monuments_visit).update();
+                    circles_peri[id].setStyle({color: '#25AA22', fillColor: '#25AA22', fillOpacity: 0.1}).addTo(map);
+                    circles_zoom[id].remove();
+                }
             }
-        }
-    });*/
+        });
+    }
+
+    //FONCTION QUI MARCHE PAS MAIS A REfaire pour prendre en compte les id ici on recup juste l'id 1 ici
+
+	CheckIfUserIsoncircle();
+
+    function CheckIfUserIsoncircle() {
+            setInterval(function() { 
+            var d = map.distance(circles_peri[1]._latlng, circles_peri[1].getLatLng());
+    		if(d > circles_peri[1].getRadius()) {
+	    		circles_peri[1].setStyle({fillColor: 'red'});
+    		}
+        }, 1000);
+    }
+
 	});
 
 
@@ -117,10 +116,16 @@ function markerOnClick(e)
 
 
 
+/*CODE TEST A PAS EFFACER PEUT ETRE UTILE*/
 
-
-
-
+/*function markerOnClick(e)
+{
+    markers[e.sourceTarget.options.id].setLatLng(["52.65665", "6.6462654"]).update();
+    console.log(e.sourceTarget.options.id);
+  alert("hi. you clicked the marker at " + e.latlng);
+  console.log("Résultat :");
+console.log(markers[1].options.id);
+}*/
 
          /*   L.Routing.control({
   waypoints: [
@@ -138,3 +143,4 @@ function markerOnClick(e)
     }
   }
 }).addTo(map);*/
+
