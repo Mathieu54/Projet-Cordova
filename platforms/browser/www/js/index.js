@@ -1,9 +1,9 @@
 $(document).ready(function () { //Quand la page est ready
 
 	var txt_id, txt_mdp;
-	let url_api_connect = "http://localhost/Cordova/Cordova_Projet/requete/set_connection.php";
-    let url_map = "http://localhost/Cordova/Cordova_Projet/www/map.html";
-
+	let url_api_connect = "https://jordan-portfolio.dyjix.fr/projet/cordova/set_connection.php";
+    let url_map = "http://localhost/cordova/Projet-Cordova/www/map.html";
+    
     //Function qui verifie les inputs (PS: Une verification est réalisé aussi en PHP)
 	function verif_input() {
 		txt_id = $("#input_identifiant").val(); 

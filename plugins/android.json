@@ -15,6 +15,9 @@
     },
     "cordova-plugin-dialogs": {
       "PACKAGE_NAME": "io.cordova.hellocordova"
+    },
+    "cordova-plugin-browsersync-gen2": {
+      "PACKAGE_NAME": "io.cordova.hellocordova"
     }
   },
   "dependent_plugins": {}

@@ -16,6 +16,7 @@
     "browse": "^0.4.0",
     "cordova-android": "^8.1.0",
     "cordova-browser": "^6.0.0",
+    "cordova-plugin-browsersync-gen2": "^1.1.7",
     "cordova-plugin-dialogs": "^2.0.2",
     "cordova-plugin-geolocation": "^4.0.2"
   },
@@ -26,7 +27,8 @@
     "plugins": {
       "cordova-plugin-whitelist": {},
       "cordova-plugin-geolocation": {},
-      "cordova-plugin-dialogs": {}
+      "cordova-plugin-dialogs": {},
+      "cordova-plugin-browsersync-gen2": {}
     },
     "platforms": [
       "browser",
