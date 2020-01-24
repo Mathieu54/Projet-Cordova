@@ -2,7 +2,7 @@ var pos_user_marker;
 var pos_lat_user;
 var pos_long_user;
 var map;
-var time_check_pos_user = 1000;
+var time_check_pos_user = 10000;
 var markers_monu = {};
 var circles_peri = {};
 var circles_zoom = {};
@@ -61,32 +61,37 @@ $(document).ready(function () {
     add_markers_monument();
 
     function add_markers_monument() {
+
         $.ajax({
-            url: 'http://localhost/Cordova/Projet-Cordova/requete/get_monuments_all_monuments.php',
-            type: 'get',
+            url: 'https://jordan-portfolio.dyjix.fr/projet/cordova/get_monuments_all_monuments.php',
+            type: 'GET',
             dataType: 'json',
+            
             success: function (data) {
                 let liste = "";
-                for (let i=0; i < data.length; i++) {
+              
+                for (let i=0; i <= data.length; i++) {
                     var id = data[i].id;
                     var latLng = L.latLng(data[i].latitude, data[i].longitude);
                     markers_monu[id] = new L.marker(latLng, {id: id, icon: icon_monuments_no_visit}).addTo(map);
                     circles_peri[id] = new L.circle([data[i].latitude, data[i].longitude], {color: '#787878', fillColor: '#787878', fillOpacity: 0.1, radius: radius_visit}).addTo(map);
                     circles_zoom[id] = new L.circle([data[i].latitude, data[i].longitude], {fill: false, stroke: false, radius: radius_zoom}).addTo(map);
                 }
+                    
                 update_markers_visit();
             }
         });
+
     }
 
     function update_markers_visit() {
         $.ajax({
-            url: 'http://localhost/Cordova/Projet-Cordova/requete/get_monuments_user_visit.php',
-            type: 'get',
+            url: 'https://jordan-portfolio.dyjix.fr/projet/cordova/get_monuments_user_visit.php',
+            type: 'GET',
             dataType: 'json',
             success: function (data) {
                 let liste = "";
-                for (let i=0; i < data.length; i++) {
+                for (let i=0; i <= data.length; i++) {
                     var id = data[i].id_monuments;
                     markers_monu[id].setIcon(icon_monuments_visit).update();
                     circles_peri[id].setStyle({color: '#25AA22', fillColor: '#25AA22', fillOpacity: 0.1}).addTo(map);
