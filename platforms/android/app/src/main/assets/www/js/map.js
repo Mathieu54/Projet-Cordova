@@ -2,11 +2,11 @@ var pos_user_marker;
 var pos_lat_user;
 var pos_long_user;
 var map;
-var time_check_pos_user = 10000;
+var time_check_pos_user = 1000;
 var markers_monu = {};
-var circles_peri = {};
+var circles_peri = [];
 var circles_zoom = {};
-var radius_visit = 30;
+var radius_visit = 130;
 var radius_zoom = 100;
 var icon_user = L.icon({
     iconUrl: 'img/user_position.png',
@@ -29,13 +29,42 @@ $(document).ready(function () {
 
     map = L.map('affiche_map');
 
-   	function CheckPositionUser() {
-            setInterval(function() { 
+   	function CheckPositionUser(data) {
+        setInterval(function() { 
             navigator.geolocation.getCurrentPosition(update_position, position_error);
+        
+            for(let j = 1; j <= data.length; j++){
+                //longi-lat
+                
+                if(markers_monu[j] != null){
+                    //console.log(markers_monu[j]);
+                    var radius = data[j]._mRadius; // On stock  le diametre du cercle (en mètre)
+                    var centerPointCircle = data[j].getLatLng(); // On prend le centre du cercle
+
+                    var distance = pos_user_marker.getLatLng().distanceTo(centerPointCircle); // On calcul la distance entre les deux
+                    
+                    
+                    if(distance <= radius){
+                        //console.log('dedans' + j);
+                        new_markers_visit(j);
+                        j = data.length;
+                    //
+                            
+                        // ON FAIT VIBRER LE TELEPHONE ETC ETC
+                    }else{
+                        //console.log('en dehors' + j);
+                        
+                    }
+                }      
+            }
+
+           
+
+
         }, time_check_pos_user);
     }
 
-    CheckPositionUser();
+    CheckPositionUser(circles_peri);
 
     var update_position = function(position) {
         pos_lat_user = position.coords.latitude.toString();
@@ -70,18 +99,19 @@ $(document).ready(function () {
             success: function (data) {
                 let liste = "";
               
-                for (let i=0; i <= data.length; i++) {
+                for (let i=0; i < data.length; i++) {
+                    
                     var id = data[i].id;
                     var latLng = L.latLng(data[i].latitude, data[i].longitude);
                     markers_monu[id] = new L.marker(latLng, {id: id, icon: icon_monuments_no_visit}).addTo(map);
                     circles_peri[id] = new L.circle([data[i].latitude, data[i].longitude], {color: '#787878', fillColor: '#787878', fillOpacity: 0.1, radius: radius_visit}).addTo(map);
                     circles_zoom[id] = new L.circle([data[i].latitude, data[i].longitude], {fill: false, stroke: false, radius: radius_zoom}).addTo(map);
+                    update_markers_visit();
                 }
-                    
-                update_markers_visit();
             }
         });
 
+       
     }
 
     function update_markers_visit() {
@@ -89,32 +119,58 @@ $(document).ready(function () {
             url: 'https://jordan-portfolio.dyjix.fr/projet/cordova/get_monuments_user_visit.php',
             type: 'GET',
             dataType: 'json',
-            success: function (data) {
+            success: function (data2) {
                 let liste = "";
-                for (let i=0; i <= data.length; i++) {
-                    var id = data[i].id_monuments;
+                
+                for (let i=0; i < data2.length; i++) {
+                    var id = data2[i].id_monuments;  
                     markers_monu[id].setIcon(icon_monuments_visit).update();
                     circles_peri[id].setStyle({color: '#25AA22', fillColor: '#25AA22', fillOpacity: 0.1}).addTo(map);
-                    circles_zoom[id].remove();
                 }
             }
         });
     }
 
-    //FONCTION QUI MARCHE PAS MAIS A REfaire pour prendre en compte les id ici on recup juste l'id 1 ici
-
-	CheckIfUserIsoncircle();
-
-    function CheckIfUserIsoncircle() {
-            setInterval(function() { 
-            var d = map.distance(circles_peri[1]._latlng, circles_peri[1].getLatLng());
-    		if(d > circles_peri[1].getRadius()) {
-	    		circles_peri[1].setStyle({fillColor: 'red'});
-    		}
-        }, 1000);
+    function new_markers_visit(j) {
+        $.ajax({
+            url: 'https://jordan-portfolio.dyjix.fr/projet/cordova/add_monuments_users.php',
+            type: 'POST',
+            data:{
+                id_monuments: j,
+                id_users: "2",
+              },
+            success: function (response) {
+                let liste = "";
+                //document.getElementById("total_items").value=response;
+                console.log(response);
+                
+                markers_monu[j].setIcon(icon_monuments_visit).update();
+                circles_peri[j].setStyle({color: '#25AA22', fillColor: '#25AA22', fillOpacity: 0.1}).addTo(map);
+                   
+            },
+            
+        });
     }
 
-	});
+    //FONCTION QUI MARCHE PAS MAIS A REfaire pour prendre en compte les id ici on recup juste l'id 1 ici
+
+    //CheckIfUserIsoncircle(circles_peri);
+    function CheckIfUserIsoncircle(data){
+
+        
+     
+       /* setInterval(function() { 
+            for (let i=0; i < data.length; i++) {
+                var d = map.distance(circles_peri[i]._latlng, circles_peri[i].getLatLng());
+                if(d > circles_peri[i].getRadius()) {
+                    circles_peri[i].setStyle({fillColor: 'red'});
+                }
+            }
+        }, 1000);*/
+    }
+
+
+   
 
 
 
@@ -148,4 +204,4 @@ console.log(markers[1].options.id);
     }
   }
 }).addTo(map);*/
-
+});
