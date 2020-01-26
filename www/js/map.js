@@ -6,7 +6,7 @@ var time_check_pos_user = 1000;
 var markers_monu = {};
 var circles_peri = [];
 var circles_zoom = {};
-var radius_visit = 130;
+var radius_visit = 500;
 var radius_zoom = 100;
 var icon_user = L.icon({
     iconUrl: 'img/user_position.png',
@@ -43,24 +43,13 @@ $(document).ready(function () {
 
                     var distance = pos_user_marker.getLatLng().distanceTo(centerPointCircle); // On calcul la distance entre les deux
                     
-                    
                     if(distance <= radius){
-                        //console.log('dedans' + j);
                         new_markers_visit(j);
+                        navigator.vibrate(3000);
                         j = data.length;
-                    //
-                            
-                        // ON FAIT VIBRER LE TELEPHONE ETC ETC
-                    }else{
-                        //console.log('en dehors' + j);
-                        
                     }
                 }      
             }
-
-           
-
-
         }, time_check_pos_user);
     }
 
@@ -132,6 +121,7 @@ $(document).ready(function () {
     }
 
     function new_markers_visit(j) {
+        /*
         $.ajax({
             url: 'https://jordan-portfolio.dyjix.fr/projet/cordova/add_monuments_users.php',
             type: 'POST',
@@ -149,7 +139,17 @@ $(document).ready(function () {
                    
             },
             
+        });*/
+
+        $.post( "https://jordan-portfolio.dyjix.fr/projet/cordova/add_monuments_users.php", { id_monuments: j, id_users: "2" })
+        .done(function( data ) {
+            let liste = "";
+            markers_monu[j].setIcon(icon_monuments_visit).update();
+            circles_peri[j].setStyle({color: '#25AA22', fillColor: '#25AA22', fillOpacity: 0.1}).addTo(map);
         });
+
+
+
     }
 
     //FONCTION QUI MARCHE PAS MAIS A REfaire pour prendre en compte les id ici on recup juste l'id 1 ici
