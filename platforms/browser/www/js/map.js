@@ -28,6 +28,13 @@ var icon_user_gps = L.icon({
 $(document).ready(function () {
 
     map = L.map('affiche_map');
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: 'Track Monuments', maxZoom: 20, id: 'mapbox/streets-v11',
+        accessToken: 'pk.eyJ1IjoiZ3JvdXBpeCIsImEiOiJjazVlOGJiOHMyOGZnM21wZ203YjdzdW1sIn0.khLqp2UlmiehGfABIEwm0Q'}).addTo(map);
+        map.locate({setView: true, maxZoom: 15});  
+
+
+        
 
    	function CheckPositionUser(data) {
         setInterval(function() { 
@@ -45,7 +52,9 @@ $(document).ready(function () {
                     
                     if(distance <= radius){
                         new_markers_visit(j);
-                        navigator.vibrate(3000);
+                        if(device.platform != "browser"){
+                            navigator.vibrate(3000);
+                        }
                         j = data.length;
                     }
                 }      
@@ -71,10 +80,7 @@ $(document).ready(function () {
         alert('Erreur Code: ' + error.code + '\n' + ' Message: ' + error.message + '\n');
     }
 
-	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-    attribution: 'Track Monuments', maxZoom: 20, id: 'mapbox/streets-v11',
-    accessToken: 'pk.eyJ1IjoiZ3JvdXBpeCIsImEiOiJjazVlOGJiOHMyOGZnM21wZ203YjdzdW1sIn0.khLqp2UlmiehGfABIEwm0Q'}).addTo(map);
-    map.locate({setView: true, maxZoom: 15});  
+
 
     add_markers_monument();
 
@@ -141,7 +147,7 @@ $(document).ready(function () {
             
         });*/
 
-        $.post( "https://jordan-portfolio.dyjix.fr/projet/cordova/add_monuments_users.php", { id_monuments: j, id_users: "2" })
+        $.post( "https://jordan-portfolio.dyjix.fr/projet/cordova/add_monuments_users.php?monu="+j+"&user=2", { id_monuments: j, id_users: "2" })
         .done(function( data ) {
             let liste = "";
             markers_monu[j].setIcon(icon_monuments_visit).update();
