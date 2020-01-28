@@ -1,7 +1,7 @@
 var pos_user_marker;
 var pos_lat_user;
 var pos_long_user;
-var map;
+var map = L.map('affiche_map').setView([0,0], 0);
 var time_check_pos_user = 1000;
 var markers_monu = {};
 var circles_peri = [];
@@ -27,7 +27,7 @@ var icon_user_gps = L.icon({
 
 $(document).ready(function () {
 
-    map = L.map('affiche_map');
+   
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Track Monuments', maxZoom: 20, id: 'mapbox/streets-v11',
         accessToken: 'pk.eyJ1IjoiZ3JvdXBpeCIsImEiOiJjazVlOGJiOHMyOGZnM21wZ203YjdzdW1sIn0.khLqp2UlmiehGfABIEwm0Q'}).addTo(map);
