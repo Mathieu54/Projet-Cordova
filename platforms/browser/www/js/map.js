@@ -1,7 +1,7 @@
 var pos_user_marker;
 var pos_lat_user;
 var pos_long_user;
-var map;
+var map = L.map('affiche_map').setView([0,0], 0);
 var time_check_pos_user = 1000;
 var markers_monu = {};
 var circles_peri = [];
@@ -26,15 +26,11 @@ var icon_user_gps = L.icon({
 });
 
 $(document).ready(function () {
-
-    map = L.map('affiche_map');
+   
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Track Monuments', maxZoom: 20, id: 'mapbox/streets-v11',
         accessToken: 'pk.eyJ1IjoiZ3JvdXBpeCIsImEiOiJjazVlOGJiOHMyOGZnM21wZ203YjdzdW1sIn0.khLqp2UlmiehGfABIEwm0Q'}).addTo(map);
         map.locate({setView: true, maxZoom: 15});  
-
-
-        
 
    	function CheckPositionUser(data) {
         setInterval(function() { 
@@ -80,22 +76,36 @@ $(document).ready(function () {
         alert('Erreur Code: ' + error.code + '\n' + ' Message: ' + error.message + '\n');
     }
 
-
+    //Get parameter id user in url
+    function get_id_user() {
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+        
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+        
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+        };
+        var user = getUrlParameter('user');
+        return user;
+    }
 
     add_markers_monument();
 
     function add_markers_monument() {
-
         $.ajax({
             url: 'https://jordan-portfolio.dyjix.fr/projet/cordova/get_monuments_all_monuments.php',
             type: 'GET',
             dataType: 'json',
             
             success: function (data) {
-                let liste = "";
-              
                 for (let i=0; i < data.length; i++) {
-                    
                     var id = data[i].id;
                     var latLng = L.latLng(data[i].latitude, data[i].longitude);
                     markers_monu[id] = new L.marker(latLng, {id: id, icon: icon_monuments_no_visit}).addTo(map);
@@ -105,18 +115,16 @@ $(document).ready(function () {
                 }
             }
         });
-
-       
     }
 
     function update_markers_visit() {
+        var user = get_id_user();
         $.ajax({
             url: 'https://jordan-portfolio.dyjix.fr/projet/cordova/get_monuments_user_visit.php',
             type: 'GET',
+            data: {user: user},
             dataType: 'json',
             success: function (data2) {
-                let liste = "";
-                
                 for (let i=0; i < data2.length; i++) {
                     var id = data2[i].id_monuments;  
                     markers_monu[id].setIcon(icon_monuments_visit).update();
@@ -127,35 +135,19 @@ $(document).ready(function () {
     }
 
     function new_markers_visit(j) {
-        /*
+        var user = get_id_user();
         $.ajax({
-            url: 'https://jordan-portfolio.dyjix.fr/projet/cordova/add_monuments_users.php',
+            url: 'https://jordan-portfolio.dyjix.fr/projet/cordova/add_monuments_users.php?monu='+j+'&user='+user,
             type: 'POST',
             data:{
                 id_monuments: j,
-                id_users: "2",
+                id_users: user,
               },
-            success: function (response) {
-                let liste = "";
-                //document.getElementById("total_items").value=response;
-                console.log(response);
-                
+            success: function () {
                 markers_monu[j].setIcon(icon_monuments_visit).update();
-                circles_peri[j].setStyle({color: '#25AA22', fillColor: '#25AA22', fillOpacity: 0.1}).addTo(map);
-                   
-            },
-            
-        });*/
-
-        $.post( "https://jordan-portfolio.dyjix.fr/projet/cordova/add_monuments_users.php?monu="+j+"&user=2", { id_monuments: j, id_users: "2" })
-        .done(function( data ) {
-            let liste = "";
-            markers_monu[j].setIcon(icon_monuments_visit).update();
-            circles_peri[j].setStyle({color: '#25AA22', fillColor: '#25AA22', fillOpacity: 0.1}).addTo(map);
+                circles_peri[j].setStyle({color: '#25AA22', fillColor: '#25AA22', fillOpacity: 0.1}).addTo(map);       
+            }, 
         });
-
-
-
     }
 
     //FONCTION QUI MARCHE PAS MAIS A REfaire pour prendre en compte les id ici on recup juste l'id 1 ici

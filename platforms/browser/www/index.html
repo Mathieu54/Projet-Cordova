@@ -1,22 +1,42 @@
 <!DOCTYPE html><html lang="fr"><head>
-       
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
         <meta charset="utf-8">
-        <link rel="stylesheet" type="text/css" href="css/map.css">
-        <link rel="stylesheet" href="css/leaflet.css">
-   		<link rel="stylesheet" href="css/leaflet-routing.css">
+        <meta name="author" content="Jordan Di Vito | Mathieu Harmant">
+        <link rel="stylesheet" type="text/css" href="css/reset.css">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+        <link href="https://fonts.googleapis.com/css?family=Alata&display=swap" rel="stylesheet"> 
         <title>Track Monuments</title>
     </head>
     <body>
-    	<script src="js/leaflet.js"></script>
-   		<script src="js/leaflet-routing.js"></script>
-   		<script src="js/jquery.js"></script>
-		<div id="affiche_map" style="width: 100%; height: 80%;">
-			
+        <div id="login_page">
+            <div id="content_form">
 
-		</div>
-		<div id="itineraire">
-            
+                <h1 id="titre_page">Connexion</h1>
+
+                <div class="error">
+                    <p></p>
+                </div>
+
+                <div class="input_text">
+                    <label for="username">Identifiant :</label><br>
+                    <input type="text" name="identifiant" class="input_txt" value placeholder="Identifiant" id="input_identifiant">
+                </div>
+
+                <div class="input_text">
+                    <label for="password">Mot de passe:</label><br>
+                    <input type="password" name="motdepasse" class="input_txt" id="input_mdp" value placeholder="Mot de passe">
+                </div>
+
+                <input type="submit" value="Valider" id="validate">
+
+            </div>
         </div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/map.js"></script>
+        <script src="cordova.js"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/index.js"></script>
+    
 </body></html>
