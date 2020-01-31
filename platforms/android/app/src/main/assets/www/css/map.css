@@ -4,9 +4,87 @@ html {
 body {
     height: 100%;
     font-family: Alata;
+    background-color: #3d3b3b;
+	position: relative;
 }
-.itineraire {
+#affiche_map {
 	width: 100%;
-	height: 10%;
-	background-color: red;
+	height: 100%;
+	z-index: 1;
+}
+#info_map {
+	width: 100%;
+	background-color: #3d3b3b;
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	z-index: 100;
+	color: white;
+}
+#info_marker {
+	background-color: #3d3b3b;
+	width: 100%;
+}
+#info_marker h2 {
+	width: 100%;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	font-size: 30px;
+	text-align: center;
+}
+#info_marker p {
+	width: 70%;
+	margin: 15px auto;
+	text-align: center;
+}
+#info_marker button {
+	width: 50%;
+	margin-left: 25%;
+	margin-right: 25%;
+	margin-bottom: 20px;
+	padding-top: 1%;
+	padding-bottom: 1%;
+}
+#fermer_info {
+	position: absolute;
+	right: 0;
+	margin-top: 20px;
+	margin-right: 20px;
+	padding: 10px;
+	background-color: gray;
+}
+#fermer_info span {
+	color: white;
+}
+#fermer_info:hover {
+	background-color: darkgray;
+	cursor: pointer;
+}
+.entete_popup_user {
+	width: 100%;
+	text-align: center;
+	font-size: 19px;
+}
+.entete_popup_marker {
+	width: 100%;
+	text-align: center;
+}
+.titre_marker {
+	font-weight: bold;
+	font-size: 19px;
+}
+.lieu_non_visit {
+	border: 5px solid gray;
+	background-color: #b8b8b8;
+	font-size: 16px;
+}
+.lieu_visit {
+	border: 5px solid green;
+	background-color: rgba(39, 247, 12, 0.55);
+	font-size: 16px;
+}
+.lieu_itineraire {
+	border: 5px solid purple;
+	background-color: rgba(128, 0, 128, 0.46);
+	font-size: 16px;
 }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="author" content="Jordan Di Vito | Mathieu Harmant">
+        <link rel="stylesheet" type="text/css" href="css/reset.css">
+        <link rel="stylesheet" type="text/css" href="css/map.css">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/leaflet_routing.css" />
+        <link rel="shortcut icon" href="http://localhost/Cordova/Track_Monuments/requetes/images/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="http://localhost/Cordova/Track_Monuments/requetes/images/favicon.ico" type="image/x-icon">
+        <link href="https://fonts.googleapis.com/css?family=Alata&display=swap" rel="stylesheet">
+        <title>Track Monuments</title>
+    </head>
+    <body>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet_routing.js"></script>
+        <script src="js/jquery.js"></script>
+
+        <div id="affiche_map">
+
+
+        </div>
+
+        <div id="info_map">
+            <div id="fermer_info">
+                <span>X</span>
+            </div>
+            <div id="info_marker">
+                <h2 id="title_marker">Bienvenue sur Track Monuments</h2>
+                <p id="description_marker">Pour plus d'information sur les monuments ou bien un itinéraire cliquez sur les marqueurs.</p>
+                <button id="btn_itineraire">Itinéraire vers ce monument</button>
+                <button id="btn_del_iti">Supprimer l'itinéraire</button>
+                <p id="id">0</p>
+            </div>
+        </div>
+
+        <script src="cordova.js"></script>
+        <script src="js/url.js"></script>
+        <script src="js/map.js"></script>
+    </body>
+</html>

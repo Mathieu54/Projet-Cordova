@@ -1,1 +1,0 @@
-Projet-Cordova par Jordan et Mathieu
