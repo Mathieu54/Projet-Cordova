@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 let map = L.map('affiche_map').setView([0,0], 0);
 let time_check_pos_user = 1000;
 let pos_user_marker, pos_lat_user, pos_long_user, pos_gps_icon;;
@@ -11,6 +12,20 @@ let save_monu = 1;
 
 let icon_user = L.icon({
     iconUrl:  url_images + 'user_position.png',
+=======
+var pos_user_marker;
+var pos_lat_user;
+var pos_long_user;
+var map = L.map('affiche_map').setView([0,0], 0);
+var time_check_pos_user = 1000;
+var markers_monu = {};
+var circles_peri = [];
+var circles_zoom = {};
+var radius_visit = 500;
+var radius_zoom = 100;
+var icon_user = L.icon({
+    iconUrl: 'img/user_position.png',
+>>>>>>> master
     iconSize:     [20, 30]
 });
 let icon_monuments_no_visit = L.icon({
@@ -31,17 +46,28 @@ $("#btn_del_iti").hide();
 $("#id").hide();
 $("#info_map").hide();
 $(document).ready(function () {
+<<<<<<< HEAD
 
+=======
+   
+>>>>>>> master
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Track Monuments', maxZoom: 20, id: 'mapbox/streets-v11',
         accessToken: 'pk.eyJ1IjoiZ3JvdXBpeCIsImEiOiJjazYxMXhvaWcwOXB6M21xaXExejhleW56In0.4pfgvn-gRwh0Y0r0hOERAg'}).addTo(map);
 
+<<<<<<< HEAD
     map.locate({setView: true, maxZoom: 13});
 
     //Fonction qui check x time la position de l'user
     function CheckPositionUser(data) {
         setInterval(function() {
             navigator.geolocation.getCurrentPosition(update_position, position_error); //Fonction du plugin cordova geolocation
+=======
+   	function CheckPositionUser(data) {
+        setInterval(function() { 
+            navigator.geolocation.getCurrentPosition(update_position, position_error);
+        
+>>>>>>> master
             for(let j = 1; j <= data.length; j++){
                 if(markers_monu[j] != null){
                     var radius = data[j]._mRadius; // On stock  le diametre du cercle (en mètre)
@@ -106,6 +132,29 @@ $(document).ready(function () {
         alert('Erreur Code: ' + error.code + '\n' + ' Message: ' + error.message + '\n');
     }
 
+<<<<<<< HEAD
+=======
+    //Get parameter id user in url
+    function get_id_user() {
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+        
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+        
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+        };
+        var user = getUrlParameter('user');
+        return user;
+    }
+
+>>>>>>> master
     add_markers_monument();
 
     function add_markers_monument() {
@@ -128,7 +177,11 @@ $(document).ready(function () {
     }
 
     function update_markers_visit() {
+<<<<<<< HEAD
         var user = sessionStorage.getItem('id_user');
+=======
+        var user = get_id_user();
+>>>>>>> master
         $.ajax({
             url: url_getmonu_visit,
             type: 'GET',
@@ -146,13 +199,20 @@ $(document).ready(function () {
     }
 
     function new_markers_visit(j) {
+<<<<<<< HEAD
         var user = sessionStorage.getItem('id_user');
         $.ajax({
             url: url_set_visit_monu + '?monu='+j+'&user='+user,
+=======
+        var user = get_id_user();
+        $.ajax({
+            url: 'https://jordan-portfolio.dyjix.fr/projet/cordova/add_monuments_users.php?monu='+j+'&user='+user,
+>>>>>>> master
             type: 'POST',
             data:{
                 id_monuments: j,
                 id_users: user,
+<<<<<<< HEAD
             },
             success: function () {
                 markers_monu[j].setIcon(icon_monuments_visit).update();
@@ -160,6 +220,13 @@ $(document).ready(function () {
                 markers_monu[j].bindPopup("<div class='entete_popup_marker'><h2 class='titre_marker'>"+ markers_monu[j].options.nom +"</h2><p class='lieu_visit'>Lieu visité !</p><img src='" + url_images + markers_monu[j].options.image + "' height='150px' width='250px;'/></div>").update();
                 circles_visit_monu[j].setStyle({color: '#25AA22', fillColor: '#25AA22', fillOpacity: 0.1}).addTo(map);
             },
+=======
+              },
+            success: function () {
+                markers_monu[j].setIcon(icon_monuments_visit).update();
+                circles_peri[j].setStyle({color: '#25AA22', fillColor: '#25AA22', fillOpacity: 0.1}).addTo(map);       
+            }, 
+>>>>>>> master
         });
     }
 
